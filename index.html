@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bookstore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h2 { margin-top: 30px; }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background: #218838; }
+    .book {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete {
+      background: #dc3545;
+      width: auto;
+    }
+    .delete:hover { background: #c82333; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Bookstore</h1>
+
+  <!-- LOGIN -->
+  <h2>Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p id="status"></p>
+
+  <!-- ADD BOOK (ADMIN ONLY) -->
+  <div id="adminPanel" class="hidden">
+    <h2>Add Book (Admin)</h2>
+    <input id="title" placeholder="Title">
+    <input id="author" placeholder="Author">
+    <input id="year" type="number" placeholder="Year">
+    <button onclick="addBook()">Add Book</button>
+  </div>
+
+  <!-- BOOK LIST -->
+  <h2>Books</h2>
+  <div id="books"></div>
+
+<script>
+const API = "http://localhost:3000/api";
+const booksDiv = document.getElementById("books");
+let token = localStorage.getItem("token");
+
+async function login() {
+  const res = await fetch(`${API}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  if (data.token) {
+    token = data.token;
+    localStorage.setItem("token", token);
+    status.innerText = "Logged in ✔";
+    adminPanel.classList.remove("hidden");
+    loadBooks();
+  } else {
+    status.innerText = "Login failed ❌";
+  }
+}
+
+async function loadBooks() {
+  const res = await fetch(`${API}/books`);
+  const books = await res.json();
+  booksDiv.innerHTML = "";
+
+  books.forEach(b => {
+    booksDiv.innerHTML += `
+      <div class="book">
+        <div>
+          <strong>${b.title}</strong><br>
+          ${b.author} (${b.year})
+        </div>
+        ${token ? `<button class="delete" onclick="deleteBook('${b._id}')">Delete</button>` : ""}
+      </div>
+    `;
+  });
+}
+
+async function addBook() {
+  await fetch(`${API}/books`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      title: title.value,
+      author: author.value,
+      year: year.value
+    })
+  });
+  loadBooks();
+}
+
+async function deleteBook(id) {
+  await fetch(`${API}/books/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+  loadBooks();
+}
+
+loadBooks();
+</script>
+
+</body>
+</html>
