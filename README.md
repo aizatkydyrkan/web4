@@ -13,20 +13,110 @@ The application follows the **MVC (Model–View–Controller)** pattern and incl
 bookstore-api
 │
 ├── models/
-│   ├── Book.js           # Схема данных для книг (MongoDB/Mongoose)
-│   └── User.js           # Схема данных для пользователей
+│   ├── Book.js
+│   └── User.js         
 │
 ├── controllers/
-│   ├── bookController.js # Логика обработки запросов для книг
-│   └── authController.js # Логика регистрации и входа
+│   ├── bookController.js 
+│   └── authController.js
 │
 ├── routes/
-│   ├── bookRoutes.js     # Эндпоинты для работы с книгами
-│   └── authRoutes.js     # Эндпоинты для аутентификации
+│   ├── bookRoutes.js     
+│   └── authRoutes.js     
 │
 ├── middleware/
-│   ├── authMiddleware.js # Проверка JWT токена
-│   └── roleMiddleware.js # Проверка прав доступа (Admin/User)
+│   ├── authMiddleware.js 
+│   └── roleMiddleware.js 
 │
-├── .env                  # Переменные окружения (конфиденциально)
-└── server.js             # Точка входа в приложение
+├── .env                  
+└── server.js
+```
+**Models** – MongoDB schemas  
+**Controllers** – application logic  
+**Routes** – API endpoints  
+**Middleware** – authentication and authorization  
+
+---
+
+##  Objects in the Project
+
+###  Book (Primary Object)
+Fields:
+- `title`
+- `author`
+- `year`
+
+Full CRUD operations are implemented for books.
+
+---
+
+###  User (Secondary Object)
+Fields:
+- `email`
+- `password` (hashed)
+- `role` (`user` or `admin`)
+
+The User object is used for authentication and role-based access control.
+
+---
+
+##  Authentication & Security
+
+- Passwords are securely hashed using **bcrypt**
+- Authentication is implemented with **JWT (JSON Web Tokens)**
+- JWT is sent via HTTP headers:
+
+---
+
+##  Role-Based Access Control (RBAC)
+
+| Action | Access |
+|------|-------|
+| GET (read books) | Public |
+| POST (add book) | Admin only |
+| PUT (update book) | Admin only |
+| DELETE (delete book) | Admin only |
+
+All access control rules are enforced **on the backend**.
+
+---
+
+##  API Endpoints
+
+### Authentication
+- `POST /api/auth/register` – Register a user or admin
+- `POST /api/auth/login` – Login and receive JWT
+
+### Books
+- `GET /api/books` – Get all books
+- `GET /api/books/:id` – Get book by ID
+- `POST /api/books` – Create a book (**admin only**)
+- `PUT /api/books/:id` – Update a book (**admin only**)
+- `DELETE /api/books/:id` – Delete a book (**admin only**)
+
+---
+
+##  Testing (Postman)
+
+All functionality is tested using **Postman**, including:
+- Successful admin requests
+- Forbidden access for regular users
+- Unauthorized access without JWT
+
+A Postman collection is provided to demonstrate:
+- CRUD operations
+- JWT authentication
+- Role restrictions
+
+---
+
+##  Frontend (Optional)
+
+A simple HTML frontend is included **only for demonstration purposes**.  
+It allows users to:
+- Log in
+- View books
+- Add and delete books as an admin
+
+> The frontend is **not required** for Assignment 4.  
+> All security logic is handled on the backend.
