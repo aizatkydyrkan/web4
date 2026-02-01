@@ -9,23 +9,24 @@ The application follows the **MVC (Model–View–Controller)** pattern and incl
 ---
 
 ##  Project Architecture (MVC)
+```text
 bookstore-api
 │
-├── models
-│   ├── Book.js
-│   └── User.js
+├── models/
+│   ├── Book.js           # Схема данных для книг (MongoDB/Mongoose)
+│   └── User.js           # Схема данных для пользователей
 │
-├── controllers
-│   ├── bookController.js
-│   └── authController.js
+├── controllers/
+│   ├── bookController.js # Логика обработки запросов для книг
+│   └── authController.js # Логика регистрации и входа
 │
-├── routes
-│   ├── bookRoutes.js
-│   └── authRoutes.js
+├── routes/
+│   ├── bookRoutes.js     # Эндпоинты для работы с книгами
+│   └── authRoutes.js     # Эндпоинты для аутентификации
 │
-├── middleware
-│   ├── authMiddleware.js
-│   └── roleMiddleware.js
+├── middleware/
+│   ├── authMiddleware.js # Проверка JWT токена
+│   └── roleMiddleware.js # Проверка прав доступа (Admin/User)
 │
-├── .env
-└── server.js
+├── .env                  # Переменные окружения (конфиденциально)
+└── server.js             # Точка входа в приложение
