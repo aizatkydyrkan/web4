@@ -118,5 +118,5 @@ It allows users to:
 - View books
 - Add and delete books as an admin
 
-> The frontend is **not required** for Assignment 4.  
-> All security logic is handled on the backend.
+<img width="759" height="787" alt="Снимок экрана 2026-02-01 в 18 03 55" src="https://github.com/user-attachments/assets/6ad915c9-54ea-4a74-bbfb-31249f4bacad" />
+
